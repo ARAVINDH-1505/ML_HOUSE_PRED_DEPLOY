@@ -69,9 +69,12 @@ def predict():
             "error": "Prediction failed",
             "details": str(e)
         }), 500
+@app.route('/')
+def health():
+    return jsonify({"status": "Model API is running"}), 200
 
 # -------------------------------------------------
 # Run Server
 # -------------------------------------------------
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)
