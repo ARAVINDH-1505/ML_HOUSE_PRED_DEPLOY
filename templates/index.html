@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>House Price Prediction</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      padding: 25px;
+      width: 420px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      margin: 6px 0;
+      padding: 8px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>House Price Prediction</h2>
+
+  <input id="longitude" placeholder="Longitude" type="number" step="any">
+  <input id="latitude" placeholder="Latitude" type="number" step="any">
+  <input id="age" placeholder="Housing Median Age" type="number">
+  <input id="rooms" placeholder="Total Rooms" type="number">
+  <input id="bedrooms" placeholder="Total Bedrooms" type="number">
+  <input id="population" placeholder="Population" type="number">
+  <input id="households" placeholder="Households" type="number">
+  <input id="income" placeholder="Median Income" type="number" step="any">
+
+  <button onclick="predict()">Predict Price</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+function predict() {
+  const data = {
+    longitude: parseFloat(longitude.value),
+    latitude: parseFloat(latitude.value),
+    housing_median_age: parseInt(age.value),
+    total_rooms: parseInt(rooms.value),
+    total_bedrooms: parseInt(bedrooms.value),
+    population: parseInt(population.value),
+    households: parseInt(households.value),
+    median_income: parseFloat(income.value)
+  };
+
+  fetch("/predict", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(res => {
+    document.getElementById("result").innerHTML =
+      "Predicted House Price: $" + res.predictions[0].toFixed(2);
+  })
+  .catch(() => {
+    document.getElementById("result").innerHTML =
+      "Error connecting to model";
+  });
+}
+</script>
+
+</body>
+</html>
