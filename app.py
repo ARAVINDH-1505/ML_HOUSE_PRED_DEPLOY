@@ -1,6 +1,6 @@
 import joblib
 import pandas as pd
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
 # -------------------------------------------------
 # App Initialization
@@ -26,7 +26,14 @@ EXPECTED_COLUMNS = [
 ]
 
 # -------------------------------------------------
-# Prediction Endpoint
+# Home Page (Frontend UI)
+# -------------------------------------------------
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+# -------------------------------------------------
+# Prediction Endpoint (API)
 # -------------------------------------------------
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -41,13 +48,17 @@ def predict():
         if isinstance(data, dict):
             data = [data]
         elif not isinstance(data, list):
-            return jsonify({"error": "Input must be a JSON object or list of objects"}), 400
+            return jsonify({
+                "error": "Input must be a JSON object or list of objects"
+            }), 400
 
         # Convert to DataFrame
         input_df = pd.DataFrame(data)
 
         # Validate required columns
-        missing_cols = [col for col in EXPECTED_COLUMNS if col not in input_df.columns]
+        missing_cols = [
+            col for col in EXPECTED_COLUMNS if col not in input_df.columns
+        ]
         if missing_cols:
             return jsonify({
                 "error": "Missing required features",
@@ -69,9 +80,6 @@ def predict():
             "error": "Prediction failed",
             "details": str(e)
         }), 500
-@app.route('/')
-def health():
-    return jsonify({"status": "Model API is running"}), 200
 
 # -------------------------------------------------
 # Run Server
