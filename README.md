@@ -42,4 +42,4 @@ The structure of the project is as follows:
 │   └── ...
 ```
 
-For further information and detailed instructions, please refer to the respective sections.
+
