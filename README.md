@@ -41,5 +41,3 @@ The structure of the project is as follows:
 │   ├── README.md
 │   └── ...
 ```
-
-
